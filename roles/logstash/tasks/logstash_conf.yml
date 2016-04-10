@@ -1,0 +1,7 @@
+- name: Create Logstash directory
+  file: path={{ logdir }} state=directory owner=logstash group=logstash mode=755
+
+- name: Load Logstash log configuration
+  template: src=logstash_conf.j2 dest={{ logstash_config_dir }}/{{ logstash_conf_file }} owner=logstash group=logstash mode=0644
+  notify:
+   - restart logstash

@@ -1,0 +1,47 @@
+input {
+  file {
+    type => "access_log"
+    path => "{{ logdir }}/*/*/*/access_*.log"
+    start_position => "beginning"
+    sincedb_path => "{{ logstash_home }}/sincedb_access_log"
+  }
+}
+
+filter {
+  if [ type ] == "access_log" {
+    grok {
+      match => [ "message", "(?:%{IP:clientip}|-) %{NOTSPACE:loadbalancerip} - - \[%{HTTPDATE:timestamp}\] \"(?:%{WORD:method} /%{URIPATHPARAM:request}(?: HTTP/%{NUMBER:httpversion})?|%{DATA:
+  rawrequest})\" %{NUMBER:response} (?:%{NUMBER:bytes}|-) %{QS:referrer} %{QS:agent}" ]
+      match => [ "path", "%{GREEDYDATA}/%{GREEDYDATA:logtype}/%{GREEDYDATA:env}/%{GREEDYDATA:hostname}/%{GREEDYDATA:filename}\.log" ]
+      break_on_match => false
+    }
+    date {
+     match => [ "timestamp", "dd/MMM/yyyy:HH:mm:ss Z" ]
+     target => "@timestamp"
+    }
+    geoip {
+      source => "clientip"
+      target => "geoip"
+      database => "{{ logstash_home }}/{{ geolite_datafile }}"
+      add_field => [ "[geoip][coordinates]", "%{[geoip][longitude]}" ]
+      add_field => [ "[geoip][coordinates]", "%{[geoip][latitude]}"  ]
+    }
+     mutate {
+      convert => [ "[geoip][coordinates]", "float"]
+      remove_field => ["message"]
+      remove_field => [ "host" ]
+     }
+  }
+}
+
+output {
+      if [ type ] == "access_log" {
+        elasticsearch {
+            hosts => ["localhost:9200"]
+            index => "logstash-%{env}-access_log-%{+YYYY.MM.dd}"
+        }
+        stdout {
+         codec => rubydebug
+        }
+      }
+}

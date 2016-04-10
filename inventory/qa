@@ -1,0 +1,2 @@
+[all]
+qa-logstash.xxx.com ansible_fqdn="qa-logstash.xxx.com" es_mem="10g" environment="qa"

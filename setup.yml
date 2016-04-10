@@ -1,0 +1,17 @@
+- hosts: "{{ host_variable | default('all') }}"
+  remote_user: ganga
+  gather_facts: False
+  sudo: yes
+
+  vars_files:
+   - vars/default.yml
+
+  pre_tasks:
+  - include: 'tasks/install_epel.yml'
+  - include: 'tasks/install_jdk.yml'
+  - include: 'tasks/setup_user.yml'
+
+  roles:
+  - { role: elasticsearch, tags: ["elasticsearch"], sudo: yes }
+  - { role: logstash, tags: ["logstash"], sudo: yes }
+  - { role: kibana, tags: ["kibana"], sudo: yes }

@@ -1,0 +1,6 @@
+[logstash-{{ logstash_version }}]
+name=logstash repository for {{ logstash_version }} packages
+baseurl=http://packages.elastic.co/logstash/{{ logstash_base_epel_repo }}/centos
+gpgcheck=1
+gpgkey=http://packages.elastic.co/GPG-KEY-elasticsearch
+enabled=1

@@ -1,0 +1,13 @@
+- user: name={{ item }} state=present
+  with_items:
+    - elk
+    - logstash
+    - elastic
+    - kibana
+
+- file: path={{ elk_home }}/.ssh owner={{ elk_user }} group={{ elk_user }} mode=700 state=directory
+
+- name: Creating pub SSH keys
+  command: ssh-keygen -N '' -f {{ elk_home }}/.ssh/id_rsa
+    creates={{ elk_home }}/.ssh/id_rsa
+

@@ -1,0 +1,10 @@
+- name: Elasticsearch configuration
+  template: src=es.yml.j2 dest={{ es_conf }} owner={{ elk_user }} group={{ elk_user }} mode=0644
+  notify:
+   - restart elasticsearch
+  register: esconfig
+
+- name: Update Elasticsearch Memory config
+  replace: dest={{ es_startup_script }} regexp='ES_MAX_MEM=1g' replace='ES_MAX_MEM={{ es_mem }}' backup=yes
+  register: esstartupscript
+

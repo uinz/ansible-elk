@@ -1,0 +1,32 @@
+# Install EPEL Yum repo and update yum packages and dev tools
+#- get_url: dest=/tmp/epel-release-{{epel_version}}.noarch.rpm url={{epel_url}}
+#- name: Add the EPEL yum repo
+#  command: /bin/rpm -ivh /tmp/epel-release-{{epel_version}}.noarch.rpm
+#   creates=/etc/yum.repos.d/epel.repo
+
+- name: Install EPEL Release
+  yum: name="epel-release" state=present update_cache=yes
+
+- name: upgrade all packages
+  yum: name=* state=present update_cache=yes
+
+- name: install the 'Development tools' package group
+  yum: name="@Development tools" state=present update_cache=yes
+
+- name: install additional packages
+  yum: pkg={{ item }}
+  with_items:
+    - java
+    - mlocate
+    - git
+    - wget
+    - telnet
+    - libselinux-python
+    - httpd-tools
+
+- name: disable firewalld
+  service: name=firewalld enabled=no state=stopped
+
+- name: Cleanup
+  file: state=absent path=/tmp/epel-release-{{epel_version}}.noarch.rpm
+ 

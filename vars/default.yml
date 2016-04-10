@@ -1,0 +1,44 @@
+#EPEL Variables
+epel_release: "7"
+epel_version: "7-5"
+epel_url: "http://dl.fedoraproject.org/pub/epel/{{epel_release}}/x86_64/e/epel-release-{{epel_version}}.noarch.rpm"
+
+download_folder: /opt
+
+# JDK Variables
+jdk_download_url: "http://download.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz"
+jdk_wget_header: "--no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie'"
+java_home: "{{download_folder}}/jdk1.8.0_45"
+java_archive: "{{download_folder}}/jdk-8u5-linux-x64.tar.gz"
+
+# NGINX Variables
+nginx_ssl_dir: "/etc/ssl/nginx"
+server_key: "/etc/nginx/ssl/server.key"
+server_cert: "/etc/nginx/ssl/server.crt"
+nginx_version: "7"
+nginx_rpm: "nginx-1.8.1-1.el7.ngx.x86_64.rpm"
+nginx_url: "http://nginx.org/packages/centos/{{nginx_version}}/x86_64/RPMS/{{nginx_rpm}}"
+nginx_tmp_download: "/tmp/{{nginx_rpm}}"
+nginx_confd: "/etc/nginx/conf.d"
+
+# ElasticSearch Variables
+es_host: "localhost"
+es_version: "2.1.0"
+es_conf: "/etc/elasticsearch/elasticsearch.yml"
+elk_user: "elk"
+elk_home: "/home/elk"
+es_startup_script: "/usr/share/elasticsearch/bin/elasticsearch.in.sh"
+
+# Logstash variables
+logstash_version: "2.1.3"
+logstash_base_epel_repo: "2.1"
+logstash_home: "/opt/logstash"
+logdir: "/opt/logs"
+logstash_config_dir: "/etc/logstash/conf.d"
+logstash_conf_file: "logstash.conf"
+geolite_url: "http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz"
+geolite_datafile_gz: "GeoLiteCity.dat.gz"
+geolite_datafile: "GeoLiteCity.dat"
+
+# Kibana
+kibana_version: "4.4"

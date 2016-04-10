@@ -1,0 +1,23 @@
+# Install JDK
+
+- name: Download Java
+  command: "wget -q -O {{java_archive}} --no-check-certificate --no-cookies --header 'Cookie: oraclelicense=accept-securebackup-cookie' {{jdk_download_url}} creates={{java_home}}/bin/java"
+
+- name: Unpack archive
+  # Using Ansible unarchive method throws up warnings during check_results which is annoying
+  # https://github.com/ansible/ansible-modules-core/issues/74, hence using the direct tar command
+  # unarchive: src={{java_archive}} dest={{download_folder}} creates={{java_home}} copy=no
+  command: "tar -zxf {{java_archive}} -C {{download_folder}} creates={{java_home}}"
+
+- name: Set ownership
+  file: state=directory path={{java_home}} owner=root group=root recurse=yes
+
+#- name: Set java version
+#  alternatives: name=java link="/usr/bin/java" path="{{java_home}}/bin/java"
+#  alternatives: name=javac link="/usr/bin/javac" path="{{java_home}}/bin/javac"
+#  alternatives: name=jar link="/usr/bin/jar" path="{{java_home}}/bin/jar"
+  tags:
+  - setjdk
+
+- name: Clean up
+  file: state=absent path={{java_archive}}

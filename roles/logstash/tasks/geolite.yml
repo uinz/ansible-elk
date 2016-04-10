@@ -1,0 +1,15 @@
+- name: Download GeoIP Database from GeoLite to show Geo Information
+  get_url: dest={{ logstash_home }} url={{ geolite_url }} owner=logstash group=logstash backup=yes
+  register: geoipdownload
+
+- name: Check stat of GZ file
+  stat: path={{ logstash_home }}/{{ geolite_datafile_gz }}
+  register: md5datgz
+
+- name: Check status of dat file
+  stat: path={{ logstash_home }}/{{ geolite_datafile }}
+  register: md5dat
+
+- name: Unarchive GeoIP Tar
+  command: "gunzip -df {{ logstash_home }}/{{ geolite_datafile_gz }}"
+  when: md5datgz.changed or not md5dat.stat.exists
