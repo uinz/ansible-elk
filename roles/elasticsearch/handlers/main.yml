@@ -1,4 +1,4 @@
-- name: ensure elasticsearch is running
+- name: ensure elasticsearch is running. This is a test comment
   service: name=elasticsearch state=started enabled=yes
 
 - name: restart elasticsearch
